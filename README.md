@@ -38,47 +38,52 @@ Emysys/
 ```
 
 ## 4. インターフェース定義 (The Contract)
-各モジュール間のデータ受け渡しは「バケツリレー」方式で行う。以下のJSONスキーマ以外のデータが流れることは許容されない。
+各モジュール間のデータ受け渡しは backend/common/models.py に定義されたクラスのインスタンスで行う。
 
-### Contract A: F-01 (Listener) ➔ F-02 (Filter)
-**Slackの生Payloadを整形し、下流工程が扱いやすい形にする。**
+### Contract: 入力系
+**Slackからの入力、意図判定、ステータス管理に使用。**
 
-```json
-{
-  "source": "slack",                // 固定値
-  "event_id": "Ev00000000",         // Slackの一意なイベントID (トレーサビリティ用)
-  "user_id": "U00000000",           // 発言したユーザーID
-  "text_content": "助けてください"    // ユーザーのメッセージ本文
-}
+```Python
+@dataclass
+class SlackMessage:
+    event_id: str
+    user_id: str
+    text_content: str
+    intent_tag: Optional[str]  # "consultation" | "report" | "chat"
+    status: str                # 処理状況
 ```
-### Contract B: F-02/03 (Filter/DB) ➔ F-04 (Gen)
-**意図判定タグと処理ステータスを付与してコアロジックへ渡す。**
+### Contract: 出力系
+**AI生成結果の通知に使用。**
 
-```json
-{
-  "event_id": "Ev00000000",
-  "user_id": "U00000000",
-  "text_content": "助けてください",
-  "intent_tag": "consultation",     // "consultation" | "report" | "chat"
-  "status": "pending_generation"    // DB保存時のステータス
-}
-```
-
-### Contract C: F-04 (Gen) ➔ F-06 (Notify)
-**生成されたフィードバックと、通知先情報をまとめる。**
-```json
-{
-  "event_id": "Ev00000000",
-  "target_user_id": "U00000000",       // 返信先のユーザーID (= user_id)
-  "feedback_summary": "具体性を上げてください", // 生成されたテキスト
-  "status": "complete"
-}
+```Pthon
+@dataclass
+class FeedbackResponse:
+    event_id: str
+    target_user_id: str
+    feedback_summary: str
+    status: str
 ```
 
+5. 開発フローとルール
+🛠 開発環境
 
-MTGでの森重さんのアドバイスと、README（プロジェクト憲法）の定義に基づき、コウセイさん（F-04/F-05担当）が**「他メンバーの進捗を待たずに」**直ちに着手すべきタスクをリストアップしました。
+外部連携時のみJSON: Slackとの送受信時以外は、常にクラスベースでデータを扱う。
 
-これらをコピーして、自身のToDoリストやDiscordの進捗報告に使用してください。
+ENVファイルの活用: トークン等の秘匿情報は .env に記述し、コードに直接書かない。
+
+🌿 ブランチ戦略
+
+個人ブランチ: メンバーは各自の名前でブランチを作成（例: dev-miyamoto）。
+
+コミット: 頻繁なコミットとプッシュを実施し、進捗を可視化する。
+
+マージ: 共通機能（クラス定義等）は main ブランチへ集約する。
+
+🗓 スケジュール
+
+完了期限: 12月26日（金） (予備日: 12月29日)
+
+進捗報告: 問題発生時は即座にDiscordで報告し、停滞を避ける。
 
 ---
 
