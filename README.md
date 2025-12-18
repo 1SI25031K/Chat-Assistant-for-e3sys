@@ -26,6 +26,8 @@ Emysys/
 ├── README.md           # 本ドキュメント
 ├── docker-compose.yml  # ローカル開発環境用
 ├── backend/
+│   ├── common
+│   ├     └──models.py
 │   ├── f01_listener/   # [ユウリ] main.py (FastAPI/Flask)
 │   ├── f02_filter/     # [コウタ] logic.py
 │   ├── f03_db/         # [コウタ] models.py, crud.py
@@ -33,7 +35,7 @@ Emysys/
 │   ├── f05_archive/    # [コウセイ] logger.py
 │   └── f06_notify/     # [ユウリ] slack_client.py
 └── docs/               # 設計書など
-
+├── main
 ```
 
 ## 4. インターフェース定義 (The Contract)
