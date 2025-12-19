@@ -43,6 +43,17 @@ Slacker/
             └── notifier.py     # Slack APIを使用してメッセージを送信する
 ```
 
+| フォルダ名 | 主要ファイル | 役割・責務 |
+|:---|:---|:---|
+| `common/` | `models.py` | チーム共通のデータ型（Class）定義。 |
+| `f01_listener/` | `server.py` | Slack Webhookの受信（Flask等）。 |
+| | `listener.py` | 受信データを `SlackMessage` オブジェクトへ変換。 |
+| `f02_filter/` | `filter.py` | メッセージ内容から `intent_tag` を決定する。 |
+| `f03_db/` | `database.py` | データの保存およびステータス管理。 |
+| `f04_gen/` | `generator.py` | `SlackMessage` を元にGeminiで回答を生成。 |
+| `f05_archive/` | `logger.py` | 最終結果を `local_history.jsonl` に追記保存。 |
+| `f06_notify/` | `notifier.py` | `FeedbackResponse` をSlack APIで送信。 |
+
 ## 4. インターフェース定義 (The Contract)
 各モジュール間のデータ受け渡しは backend/common/models.py に定義されたクラスのインスタンスで行う。
 
