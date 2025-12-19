@@ -1,24 +1,24 @@
-# Slacker Project - Developer Guide 
+# Slacker 
 
 ## 1. プロジェクト概要
 **Slacker**は、スタートアップチームの「具体性の欠如」と「連携不全」を解決するためのAIアシスタントシステムである。
 
 ---
 
-## 2. チーム構成と担当領域 (Roles)
+## 2. チーム構成と担当領域
 
 | ID | 機能モジュール | 担当者 | 役割 (Role) | 責務 (Responsibility) |
 |:--|:---|:---|:---|:---|
 | **F-01** | **Listener** | **ユウリ** | I/O (Input) | SlackからのWebhook受信、Payloadの正規化 |
 | **F-02** | **Filter** | **コウタ** | Filter | ユーザー意図の判定 (Intent Classification) |
 | **F-03** | **Persistence** | **コウタ** | DB | データの永続化、ステータス管理 |
-| **F-04** | **Gen (Core)** | **コウセイ** | Logic | AIによるフィードバック生成 |
-| **F-05** | **Archive** | **コウセイ** | Archive | ログ保存、学習データ蓄積 |
+| **F-04** | **Gen (Core)** | **コウセイ** | Logic | Gemini API を使用したフィードバック生成 |
+| **F-05** | **Archive** | **コウセイ** | Archive | AWS DB への全ログ蓄積実装 |
 | **F-06** | **Notify** | **ユウリ** | I/O (Output) | Slackへのレスポンス送信 |
 
 ---
 
-## 3. ディレクトリ構造 (Directory Structure)
+## 3. ディレクトリ構造
 
 ```text
 Slacker/
@@ -54,7 +54,7 @@ Slacker/
 | `f05_archive/` | `logger.py` | 最終結果を `local_history.jsonl` に追記保存。 |
 | `f06_notify/` | `notifier.py` | `FeedbackResponse` をSlack APIで送信。 |
 
-## 4. インターフェース定義 (The Contract)
+## 4. インターフェース定義
 各モジュール間のデータ受け渡しは backend/common/models.py に定義されたクラスのインスタンスで行う。
 
 ### Contract: 入力系
@@ -108,7 +108,15 @@ ENVファイルの活用: トークン等の秘匿情報は .env に記述し、
 
 ### 宮本航聖のタスク
 
-#### 1. チームマネジメント
+#### 1. インフラ・API統合
+
+[ ] AWS環境構築: データベース（RDSまたはDynamoDB）のセットアップと接続実装。
+
+[ ] Gemini API統合: generator.py の本格実装とプロンプトチューニング。
+
+[ ] Slack API接続: ユウリさんのモジュールに Slack SDK を組み込み、実送受信を可能にする。
+
+[ ] テスト用Slack環境: テスト用ワークスペース/Botのセットアップとメンバーへの開放。
 
 #### 2. インターフェース（Contract）の合意形成
 
