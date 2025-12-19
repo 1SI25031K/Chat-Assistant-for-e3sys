@@ -12,8 +12,8 @@
 | **F-01** | **Listener** | **ユウリ** | I/O (Input) | SlackからのWebhook受信、Payloadの正規化 |
 | **F-02** | **Filter** | **コウタ** | Filter | ユーザー意図の判定 (Intent Classification) |
 | **F-03** | **Persistence** | **コウタ** | DB | データの永続化、ステータス管理 |
-| **F-04** | **Gen (Core)** | **コウセイ** | Logic | AIによるフィードバック生成 |
-| **F-05** | **Archive** | **コウセイ** | Archive | ログ保存、学習データ蓄積 |
+| **F-04** | **Gen (Core)** | **コウセイ** | Logic | Gemini API を使用したフィードバック生成 |
+| **F-05** | **Archive** | **コウセイ** | Archive | AWS DB への全ログ蓄積実装 |
 | **F-06** | **Notify** | **ユウリ** | I/O (Output) | Slackへのレスポンス送信 |
 
 ---
@@ -108,7 +108,15 @@ ENVファイルの活用: トークン等の秘匿情報は .env に記述し、
 
 ### 宮本航聖のタスク
 
-#### 1. チームマネジメント
+#### 1. インフラ・API統合
+
+[ ] AWS環境構築: データベース（RDSまたはDynamoDB）のセットアップと接続実装。
+
+[ ] Gemini API統合: generator.py の本格実装とプロンプトチューニング。
+
+[ ] Slack API接続: ユウリさんのモジュールに Slack SDK を組み込み、実送受信を可能にする。
+
+[ ] テスト用Slack環境: テスト用ワークスペース/Botのセットアップとメンバーへの開放。
 
 #### 2. インターフェース（Contract）の合意形成
 
