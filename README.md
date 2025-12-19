@@ -40,7 +40,7 @@ Slacker/
 　　　　　├── f05_archive/        # [F-05] 記録：将来の学習用に全てのログを保存する。
 　　　　　│   └── logger.py       # ログファイル（JSONL）への書き込み処理
 　　　　　└── f06_notify/         # [F-06] 出口：完成したフィードバックをSlackに送り返す。
-    　　　　　　　　　└── notifier.py     # Slack APIを使用してメッセージを送信する
+            └── notifier.py     # Slack APIを使用してメッセージを送信する
 ```
 
 ## 4. インターフェース定義 (The Contract)
