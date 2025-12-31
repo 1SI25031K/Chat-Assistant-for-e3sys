@@ -6,7 +6,10 @@ from backend.common.models import SlackMessage, FeedbackResponse
 # 1. 環境変数の読み込み
 load_dotenv()
 
-# 2. Gemini APIの設定 (新ライブラリ版)
+if not os.getenv("GEMINI_API_KEY"):
+    raise EnvironmentError("GEMINI_API_KEY is not set in environment variables.")
+
+# 2. Gemini APIの設定
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
 # 新しいクライアントの初期化
