@@ -184,12 +184,12 @@ graph TD
         end
 
         %% 各機能モジュール (ラベルを引用符で囲み安全に)
-        F01["<b>F-01: Listener</b><br/>server.py<br/>(Yuri)"]
-        F02["<b>F-02: Filter</b><br/>filter.py<br/>(Kota)"]
-        F03["<b>F-03: DB</b><br/>database.py<br/>(Kota)"]
-        F04["<b>F-04: Gen</b><br/>generator.py<br/>(Kosei)"]
-        F05["<b>F-05: Archive</b><br/>logger.py<br/>(Kosei)"]
-        F06["<b>F-06: Notify</b><br/>notifier.py<br/>(Yuri)"]
+        F01["<b>F-01: Listener</b><br/>server.py"]
+        F02["<b>F-02: Filter</b><br/>filter.py"]
+        F03["<b>F-03: DB</b><br/>database.py"]
+        F04["<b>F-04: Gen</b><br/>generator.py"]
+        F05["<b>F-05: Archive</b><br/>logger.py"]
+        F06["<b>F-06: Notify</b><br/>notifier.py"]
 
         %% 処理フロー
         UserEvent -->|"HTTP POST (JSON)"| F01
