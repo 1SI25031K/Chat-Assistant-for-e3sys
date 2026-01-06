@@ -166,8 +166,8 @@ ENVファイルの活用: トークン等の秘匿情報は .env に記述し、
 | **Security** | Bot IDによる無限ループ除外ロジックの厳格化 | **ユウリ** | 自分の発言に反応しないためのガードレール実装 |
 | **Config** | `.env` 情報の AWS Secrets Manager への移行 | **コウセイ** | セキュアな環境変数管理 |
 
-
-graph TD
+```mermaid
+flowchart TD
     %% 外部プラットフォーム
     subgraph Slack_Workspace ["Slack API (External)"]
         UserEvent([ユーザーの投稿]) 
@@ -223,4 +223,4 @@ graph TD
     style F03 fill:#fffce1,stroke:#333
     style F06 fill:#fffce1,stroke:#333
 
-
+```
