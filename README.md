@@ -166,3 +166,56 @@ ENVファイルの活用: トークン等の秘匿情報は .env に記述し、
 | **Security** | Bot IDによる無限ループ除外ロジックの厳格化 | **ユウリ** | 自分の発言に反応しないためのガードレール実装 |
 | **Config** | `.env` 情報の AWS Secrets Manager への移行 | **コウセイ** | セキュアな環境変数管理 |
 
+```mermaid
+graph TD
+    %% 外部プラットフォーム
+    subgraph Slack_Workspace ["Slack API (External)"]
+        UserEvent([ユーザーの投稿]) 
+        BotNotice([Botからのフィードバック通知])
+    end
+
+    %% バックエンド全体
+    subgraph Slacker_Backend ["backend/ (Python Logic)"]
+        
+        %% データクラス（設計の核）
+        subgraph Models ["common/models.py"]
+            SM[[SlackMessage Class]]
+            FR[[FeedbackResponse Class]]
+        end
+
+        %% 各機能モジュール (ラベルを引用符で囲み安全に)
+        F01["<b>F-01: Listener</b><br/>server.py<br/>(Yuri)"]
+        F02["<b>F-02: Filter</b><br/>filter.py<br/>(Kota)"]
+        F03["<b>F-03: DB</b><br/>database.py<br/>(Kota)"]
+        F04["<b>F-04: Gen</b><br/>generator.py<br/>(Kosei)"]
+        F05["<b>F-05: Archive</b><br/>logger.py<br/>(Kosei)"]
+        F06["<b>F-06: Notify</b><br/>notifier.py<br/>(Yuri)"]
+
+        %% 処理フロー
+        UserEvent -->|"HTTP POST (JSON)"| F01
+        F01 -->|"1. インスタンス化"| SM
+        SM -->|"2. 意図判定"| F02
+        F02 -->|"3. 永続化依頼"| F03
+        F03 -->|"4. 生成フェーズへ"| F04
+        
+        F04 -->|"5. 変換"| FR
+        FR -->|"6. 通知実行"| F06
+        FR -->|"7. ログ記録"| F05
+    end
+
+    %% インフラ・外部サービス
+    subgraph Cloud_Resources ["Managed Services"]
+        AWS_DB[(AWS RDS / DynamoDB)]
+        Gemini_API{Gemini API}
+    end
+
+    %% 外部連携
+    F03 <-->|"boto3 / SQLAlchemy"| AWS_DB
+    F04 <-->|"google-generativeai"| Gemini_API
+    F06 -->|"Slack SDK"| BotNotice
+
+    %% スタイル定義
+    style SM fill:#f9f,stroke:#333,stroke-width:2px
+    style FR fill:#bbf,stroke:#333,stroke-width:2px
+    style F04 fill:#dfd,stroke:#333,stroke-width:2px
+
