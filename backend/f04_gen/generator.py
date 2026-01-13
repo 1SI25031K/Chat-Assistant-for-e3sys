@@ -15,66 +15,61 @@ if not GEMINI_API_KEY:
 # 新しいクライアントの初期化
 client = genai.Client(api_key=GEMINI_API_KEY)
 
-def generate_feedback(message: SlackMessage) -> FeedbackResponse:
+# backend/f04_gen/generator.py
+
+# ... (既存のインポートやクライアント初期化はそのまま) ...
+
+def generate_feedback(message: SlackMessage, context: str = "") -> FeedbackResponse:
     """
-    [F-04] AIフィードバック生成 (google-genai 新ライブラリ対応版)
+    [F-04] AIフィードバック生成 (RAG対応版)
+    context 引数を通じて、DynamoDBから取得した過去ログをプロンプトに注入します。
     """
-    print(f"--- [F-04] Gemini Thinking... (Intent: {message.intent_tag}) ---")
+    print(f"--- [F-04] Gemini Thinking with Context... (Intent: {message.intent_tag}) ---")
 
     try:
-        # 3. プロンプト（命令文）の構築
+        # 1. プロンプト（命令文）の構築
         system_instruction = """
-        GeminiAPIへのプロンプト、ひねり出したので、見て下さい
-
-一旦push/mergeしますが、補足があればどんどん改善していきましょう
+あなたは高度なエンジニアリング・コミュニケーションの専門家「E3-Assist」です。
+Slack上の質問者と回答者のやり取りを解析し、両者の技術的成長を最大化するためのフィードバックを提供してください。
 
 ### 役割
-あなたは高度なエンジニアリング・コミュニケーションの専門家「E3-Assist」です。
-Slack上の質問者と回答者のやり取りを解析し、両者の技術的成長を最大化するための、厳格かつ建設的なフィードバックを提供してください。
+- 過去のやり取り（コンテキスト）を踏まえ、一貫性のあるアドバイスをすること。
+- 以前教えたことが守られているか、あるいは進歩しているかを評価すること。
 
 ### 制約事項
-- 挨拶（「こんにちは」「お疲れ様です」等）は一切禁止。
-- 絵文字は一切禁止。
+- 挨拶、絵文字は一切禁止。
 - 結論から述べ、箇条書きで簡潔に構成すること。
 - 「優しさ」よりも「改善点の具体性」を優先すること。
 
-### 評価・フィードバック基準
-1. 質問者へのフィードバック:
-   - 背景が共有されているか。
-   - 試したことが明記されているか。
-   - 期待値と実測値の差分が明確か。
-2. 回答者へのフィードバック:
-   - 答えを直接与えすぎていないか（考え方を提示しているか）。
-   - 参照すべき公式ドキュメントやキーワードを提示しているか。
-
 ### 出力フォーマット
 【スコア】質問: X/10, 回答: X/10
-【質問者への改善点】
-- (具体的な改善アクション)
-【回答者への改善点】
+【これまでの流れを踏まえた評価】
+- (過去ログとの関連性や、会話の進捗に対する評価)
+【今回のメッセージへの改善点】
 - (具体的な改善アクション)
         """
         
+        # 2. 過去の文脈（RAG）と現在のメッセージを結合
         user_query = f"""
-        【ユーザーの状況】
+        【これまでの会話の流れ】
+        {context if context else "（過去のやり取りはありません）"}
+        
+        【今回のユーザーの状況】
         ユーザーID: {message.user_id}
         意図タグ: {message.intent_tag}
         
-        【メッセージ内容】
+        【今回のメッセージ内容】
         {message.text_content}
         """
         
-        # 4. 生成実行 (新ライブラリの構文)
-        # model引数でモデル名を指定します
+        # 3. 生成実行
         response = client.models.generate_content(
             model="gemini-1.5-flash",
             contents=f"{system_instruction}\n\n{user_query}"
         )
         
-        # 結果のテキストを取り出す
         ai_text = response.text.strip()
 
-        # 5. Contract C の作成
         return FeedbackResponse(
             event_id=message.event_id,
             target_user_id=message.user_id,
@@ -84,12 +79,7 @@ Slack上の質問者と回答者のやり取りを解析し、両者の技術的
 
     except Exception as e:
         print(f"Gemini API Error: {e}")
-        return FeedbackResponse(
-            event_id=message.event_id,
-            target_user_id=message.user_id,
-            feedback_summary="申し訳ありません。AI接続エラーが発生しました。後でもう一度お試しください。",
-            status="error"
-        )
+        # ... (エラー処理はそのまま) ...
 
 # 🧪 単体テスト用
 if __name__ == "__main__":
