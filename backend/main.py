@@ -51,9 +51,9 @@ def run_pipeline(input_message: SlackMessage):
     print(f"🔍 過去の文脈を取得中...")
     history_context = db.get_recent_history(input_message.channel_id, limit=10)
 
-    # --- Phase 3: AI Generation (F-04) ---
-    # 【修正】generate_feedback に history_context を渡す
     feedback_response = generate_feedback(analyzed_message, context=history_context)
+
+    feedback_response.ts = input_message.ts  # スレッド返信のためにtsをセット
     
     # --- Phase 4: Archive Result (F-05) ---
     # 生成された回答をDBに追記（save_logのfeedback引数を使用）

@@ -17,19 +17,15 @@ slack_token = os.getenv("SLACK_BOT_TOKEN")
 client = WebClient(token=slack_token)
 
 def send_reply(response: FeedbackResponse, channel_id: str) -> bool:
-    """
-    [F-06] Slackへの返信送信
-    修正点: channel_id を引数に追加し、宛先をそこに固定しました。
-    """
+
     print(f"--- 📤 [F-06] Sending Reply to Channel: {channel_id} ---")
 
     try:
         # メッセージ送信の実行
         result = client.chat_postMessage(
-            # ▼▼▼【修正】ここを user_id から channel_id に変更 ▼▼▼
             channel=channel_id,
-            # ▲▲▲ ---------------------------------------------
-            text=response.feedback_summary
+            text=response.feedback_summary,
+            thread_ts=response.ts # スレッド返信
         )
         
         if result["ok"]:
@@ -47,7 +43,7 @@ def send_reply(response: FeedbackResponse, channel_id: str) -> bool:
         print(f"❌ Unexpected Error in F-06: {e}")
         return False
 
-# 🧪 単体テスト用ブロック
+# 単体テスト用ブロック
 if __name__ == "__main__":
     print("🚀 F-06 Standalone Test")
     

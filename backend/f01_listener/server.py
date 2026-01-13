@@ -88,12 +88,12 @@ def slack_events():
         print(f"👂 [F-01] Valid Message detected: {text[:30]}...")
 
         # 4. Contract A: SlackMessage生成
-        # まだ質問かどうかわからないので、intent_tag="pending" で初期化
         input_message = SlackMessage(
             event_id=f"evt_{ts}",
             user_id=user_id,
             channel_id=channel_id,
             text_content=text,
+            ts=ts,  # Slack から受け取った ts をセット
             intent_tag="pending",  # F-02で判定されるため保留
             status="received"
         )
