@@ -42,7 +42,6 @@ functions:
           method: ANY
     timeout: 30
 
-# 🔌 使用するプラグイン（ここが重複していたので1箇所にまとめました）
 plugins:
   - serverless-wsgi
   - serverless-python-requirements
