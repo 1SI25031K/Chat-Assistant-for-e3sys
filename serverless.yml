@@ -20,9 +20,18 @@ provider:
             - dynamodb:Scan
           Resource: "*"
 
+# 📦 パッケージの軽量化設定
+package:
+  patterns:
+    - '!node_modules/**'
+    - '!.venv/**'
+    - '!venv/**'
+    - '!.git/**'
+    - '!__pycache__/**'
+    - '!.serverless/**'
+
 functions:
   api:
-    # 前回のデバッグで確定したパス
     handler: backend/f01_listener/server.handler
     events:
       - httpApi:
@@ -33,14 +42,16 @@ functions:
           method: ANY
     timeout: 30
 
+# 🔌 使用するプラグイン（ここが重複していたので1箇所にまとめました）
 plugins:
   - serverless-wsgi
   - serverless-python-requirements
 
 custom:
   wsgi:
-    # Flaskアプリが定義されている場所
     app: backend/f01_listener/server.app
     packRequirements: false
   pythonRequirements:
     dockerizePip: true
+    slim: true
+    strip: false

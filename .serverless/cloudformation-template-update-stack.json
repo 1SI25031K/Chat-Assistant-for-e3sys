@@ -173,7 +173,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/slacker/dev/1768346652207-2026-01-13T23:24:12.207Z/slacker.zip"
+          "S3Key": "serverless/slacker/dev/1768349941709-2026-01-14T00:19:01.709Z/slacker.zip"
         },
         "Handler": "backend/f01_listener/server.handler",
         "Runtime": "python3.12",
@@ -191,14 +191,14 @@
         "ApiLogGroup"
       ]
     },
-    "ApiLambdaVersionnIusPSrlWGuzMde5AMe0Zg5CeUTJkEfGFqHmRFPoQ": {
+    "ApiLambdaVersionbWDqqXjWZNiwcBd7sbzaNvgKlUN8h6ETdD2loqPXqxk": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "ApiLambdaFunction"
         },
-        "CodeSha256": "9Mf/bXksN0Pc6M0uJbi+sk/2hO2nDKUf+5ZoTkR35vM="
+        "CodeSha256": "cgrdfqfwG3gISZ8eUH6mL7hg6addrTbH9ZvBLcZHs9k="
       }
     },
     "HttpApi": {
@@ -353,7 +353,7 @@
     "ApiLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "ApiLambdaVersionnIusPSrlWGuzMde5AMe0Zg5CeUTJkEfGFqHmRFPoQ"
+        "Ref": "ApiLambdaVersionbWDqqXjWZNiwcBd7sbzaNvgKlUN8h6ETdD2loqPXqxk"
       },
       "Export": {
         "Name": "sls-slacker-dev-ApiLambdaFunctionQualifiedArn"

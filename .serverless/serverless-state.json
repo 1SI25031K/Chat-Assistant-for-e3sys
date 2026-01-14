@@ -197,7 +197,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/slacker/dev/1768346652207-2026-01-13T23:24:12.207Z/slacker.zip"
+                "S3Key": "serverless/slacker/dev/1768349941709-2026-01-14T00:19:01.709Z/slacker.zip"
               },
               "Handler": "backend/f01_listener/server.handler",
               "Runtime": "python3.12",
@@ -215,14 +215,14 @@
               "ApiLogGroup"
             ]
           },
-          "ApiLambdaVersionnIusPSrlWGuzMde5AMe0Zg5CeUTJkEfGFqHmRFPoQ": {
+          "ApiLambdaVersionbWDqqXjWZNiwcBd7sbzaNvgKlUN8h6ETdD2loqPXqxk": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "ApiLambdaFunction"
               },
-              "CodeSha256": "9Mf/bXksN0Pc6M0uJbi+sk/2hO2nDKUf+5ZoTkR35vM="
+              "CodeSha256": "cgrdfqfwG3gISZ8eUH6mL7hg6addrTbH9ZvBLcZHs9k="
             }
           },
           "HttpApi": {
@@ -374,7 +374,7 @@
           "ApiLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "ApiLambdaVersionnIusPSrlWGuzMde5AMe0Zg5CeUTJkEfGFqHmRFPoQ"
+              "Ref": "ApiLambdaVersionbWDqqXjWZNiwcBd7sbzaNvgKlUN8h6ETdD2loqPXqxk"
             },
             "Export": {
               "Name": "sls-slacker-dev-ApiLambdaFunctionQualifiedArn"
@@ -506,7 +506,9 @@
         "packRequirements": false
       },
       "pythonRequirements": {
-        "dockerizePip": true
+        "dockerizePip": true,
+        "slim": true,
+        "strip": false
       }
     },
     "plugins": [
@@ -541,7 +543,7 @@
         "memory": 1024,
         "runtime": "python3.12",
         "vpc": {},
-        "versionLogicalId": "ApiLambdaVersionnIusPSrlWGuzMde5AMe0Zg5CeUTJkEfGFqHmRFPoQ"
+        "versionLogicalId": "ApiLambdaVersionbWDqqXjWZNiwcBd7sbzaNvgKlUN8h6ETdD2loqPXqxk"
       }
     },
     "configValidationMode": "warn",
@@ -550,6 +552,22 @@
       "service": "slacker",
       "provider": {
         "$ref": "$[\"service\"][\"provider\"]"
+      },
+      "package": {
+        "patterns": [
+          "!node_modules/**",
+          "!.venv/**",
+          "!venv/**",
+          "!.git/**",
+          "!__pycache__/**",
+          "!.serverless/**",
+          "wsgi_handler.py",
+          "serverless_wsgi.py",
+          ".serverless-wsgi"
+        ],
+        "artifactsS3KeyDirname": "serverless/slacker/dev/code-artifacts",
+        "artifact": "/Users/kosei/Slacker/.serverless/slacker.zip",
+        "artifactDirectoryName": "serverless/slacker/dev/1768349941709-2026-01-14T00:19:01.709Z"
       },
       "functions": {
         "$ref": "$[\"service\"][\"functions\"]"
@@ -567,7 +585,7 @@
     "artifact": "/Users/kosei/Slacker/.serverless/slacker.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/slacker/dev/1768346652207-2026-01-13T23:24:12.207Z",
+    "artifactDirectoryName": "serverless/slacker/dev/1768349941709-2026-01-14T00:19:01.709Z",
     "artifact": "slacker.zip"
   }
 }
